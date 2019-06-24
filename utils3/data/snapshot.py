@@ -1,5 +1,6 @@
 import json
 import sys
+import pickle
 from plyvel import DB
 from logbook import StreamHandler, Logger
 
@@ -35,6 +36,10 @@ class Snapshot(object):
         for k, v in self.db.iterator():
             yield self.recover_bytes(k), self.recover_bytes(v)
 
+    def __contains__(self, key):
+        # raise Exception('we do NOT know which one means EXIST')
+        return self.get(key, None) is not None
+
     def close(self):
         if self.db:
             self.db.close()
@@ -48,6 +53,9 @@ class Snapshot(object):
         all data will be translated to bytes if possible.
         FIXME: now obey json as much as possible, but we may need pickle
         """
+        s = pickle.dumps(data)
+        return s
+
         if isinstance(data, bytes):
             return data
         elif isinstance(data, str):
@@ -70,9 +78,11 @@ class Snapshot(object):
             data = data.encode()
             return data
 
-
     @staticmethod
     def recover_bytes(data):
+        s = data
+        return pickle.loads(s)
+
         data = data.decode()
         try:
             return json.loads(data)
@@ -89,7 +99,7 @@ class Snapshot(object):
         key = self.to_bytes(k)
         res = self.db.get(key, default)
 
-        if res is not default:
+        if res != default:
             res = self.recover_bytes(res)
             logger.debug('get exist: {} -> data(type={}, {})',
                          k, type(res), res if isinstance(res, int) else len(res))
@@ -102,6 +112,9 @@ class Snapshot(object):
         key = self.to_bytes(k)
         value = self.to_bytes(v)
         return self.db.put(key, value)
+
+    def exist(self, key):
+        return key in self
 
     def delete(self, k):
         key = self.to_bytes(k)
@@ -206,9 +219,10 @@ def test_null():
         print(kwargs)
         return []
     res = inner(5, 6, 1, info='test', extra=None)
-
+    db_value = app.get([6, 1, 'test'])
     print(res)
-    assert res == app.get([6, 1, 'test', None])
+    print(db_value)
+    assert res == db_value
 
 
 def test_iter():
@@ -218,10 +232,25 @@ def test_iter():
         print(k, v)
 
 
-def test_in():
-    app = Snapshot('./db')
+def test_op():
+    app = Snapshot('./db/op')
 
-    print(app.exist('None'))
+    key = ['test_put']
+
+    app.get(key)
+
+    right = ['test_put']
+    app.put(key, right)
+    left = app.get(key)
+    assert left == right
+
+    right = 'test_put'
+    app.put(key, 'test_put')
+    left = app.get(key)
+    assert left == right
+
+    print(app.exist(key))
+
 
 if __name__ == "__main__":
     test()
