@@ -31,6 +31,8 @@ import os
 from types import MethodType, FunctionType
 from typing import Any
 
+import json
+
 
 def decorator(func):
     def inner(*args, **kwargs):
@@ -41,21 +43,33 @@ def decorator(func):
     return inner
 
 
+class ArgConfigSubparser():
+    def __init__(self, parent, subparser):
+        self._config: ArgConfigParser = parent
+        self._object: _ArgumentGroup = subparser
+
+    def __getattr__(self, item):
+        return getattr(self._object, item)
+
+    def add_argument(self, *args, **kwargs):
+        res = self._object.add_argument(*args, **kwargs)
+        return self._config.fix_argument(res)
+
+
 class ArgConfigGroup():
     def __init__(self, parent, group):
         self._config: ArgConfigParser = parent
-        self._group: _ArgumentGroup = group
+        self._object: _ArgumentGroup = group
 
     def __getattr__(self, item):
-        return getattr(self._group, item)
+        return getattr(self._object, item)
 
     def add_argument(self, *args, **kwargs):
-        res = self._group.add_argument(*args, **kwargs)
+        res = self._object.add_argument(*args, **kwargs)
         return self._config.fix_argument(res)
 
     def add_argument_group(self, *args: Any, **kwargs: Any):
-        res = self._group.add_argument_group(*args, **kwargs)
-
+        res = self._object.add_argument_group(*args, **kwargs)
         return ArgConfigGroup(self, res)
 
 
@@ -103,10 +117,14 @@ class ArgConfigParser(ArgumentParser):
 
         return attr
 
-    def get_config(self, key, type=None):
+    def get_config(self, key, ktype=None):
         value = self.config[key]
-        if type:
-            return type(value)
+        if ktype is int:
+            return self.config.getint(key)
+        elif ktype is float:
+            return self.config.getfloat(key)
+        elif ktype is bool:
+            return self.config.getboolean(key)
         else:
             return value
 
@@ -133,6 +151,12 @@ class ArgConfigParser(ArgumentParser):
 
         return ArgConfigGroup(self, res)
 
+    def merge(self, args):
+        for k, v in self.config.items():
+            if not hasattr(args, k):
+                setattr(args, k, v)
+        return args
+
     def parse_args(self, *args, **kwargs):
         """
         we call parse, but set default from the config
@@ -145,4 +169,6 @@ class ArgConfigParser(ArgumentParser):
         # must fix the type, so hook is still better
         # self.set_defaults(**dict(self.config))
 
-        return super().parse_args(*args, **kwargs)
+        origin_args = super().parse_args(*args, **kwargs)
+
+        return self.merge(origin_args)

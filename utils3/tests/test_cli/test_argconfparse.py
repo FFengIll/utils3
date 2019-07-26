@@ -1,6 +1,5 @@
 from utils3.cli.argconfigparse import *
-import pytest
-
+from utils3.tests.test_cli.fixtures import config_file,section_config_file
 
 def test_decorator():
     parser = ArgConfigParser()
@@ -20,16 +19,6 @@ def test_change_default():
     print(args)
     assert args.a == '123'
 
-
-@pytest.fixture()
-def config_file(tmp_path):
-    file = tmp_path / 'default.config'
-    file.write_text((
-        'a=1\n'
-        'a.b.c=1\n'
-        'a_b_c=1\n'
-    ))
-    return file
 
 
 def test_config_default(config_file):
@@ -51,7 +40,7 @@ def test_config_default(config_file):
 
 
 def test_group(config_file):
-    parser = ArgConfigParser(arg_config= config_file)
+    parser = ArgConfigParser(arg_config=config_file)
     group = parser.add_argument_group('test')
     group.add_argument('-a', action='store', type=int)
     args = parser.parse_args([])
@@ -59,17 +48,43 @@ def test_group(config_file):
     assert args.a is 1
 
 
+def test_argument_type(config_file):
+    parser = ArgConfigParser(arg_config=config_file)
+    parser.add_argument('-int', action='store', type=int)
+    parser.add_argument('-str', action='store', type=str)
+    parser.add_argument('-list', action='store', type=list)
+    parser.add_argument('-dict', action='store', type=dict)
+    args = parser.parse_args([])
+    parser.print_config()
+    assert args.int == 1
+    assert args.str == "1"
+    assert args.list == [1]
+    assert args.dict == {'1': 1}
+
+
+def test_merge_args(config_file):
+    parser = ArgConfigParser(arg_config=config_file)
+    parser.add_argument('-int', action='store', type=int)
+
+    args = parser.parse_args([])
+    print(args)
+
+
+def test_subparser_conflict():
+    pass
+
 def test_copy_construct():
     class A:
         def __init__(self):
-            self.a=1
-    class B(A):
-        def __init__(self,parent):
-            self.b=2
-            super().__init__()
-            self= parent
+            self.a = 1
 
-    a=A()
-    a.a=10
-    b=B(a)
-    print(a.a,b.a,b.b)
+    class B(A):
+        def __init__(self, parent):
+            self.b = 2
+            super().__init__()
+            self = parent
+
+    a = A()
+    a.a = 10
+    b = B(a)
+    print(a.a, b.a, b.b)
