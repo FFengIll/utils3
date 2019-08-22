@@ -3,6 +3,7 @@ import sys
 import pickle
 from plyvel import DB
 from logbook import StreamHandler, Logger
+import logging
 
 handler = StreamHandler(sys.stdout, level='DEBUG')
 handler.push_application()
@@ -146,9 +147,23 @@ class Snapshot(object):
             key.append(kwargs[k])
         return key
 
-    def snapshot(self, *_args, **_kwargs):
+    def snapshot(self, *_args, ignore=None,  redos=None, **_kwargs):
+        """
+        the args:
+        can be number: the idx/pos of given args
+        can be string: the key name in kwargs
+        
+        the kwargs:
+        some config for snapshot
+        """
         logger.debug('choose as key: {}', _args)
         positions, keys = self.get_key_config(*_args)
+
+        # will ignore some return value, aka. no snapshot for it
+        _ignore = ignore
+        # will redo for some return value, should be a list
+        _redos = redos or []
+        
 
         logger.debug('choose position args: {}', positions)
         logger.debug('choose name kwargs: {}', keys)
@@ -171,13 +186,22 @@ class Snapshot(object):
                         return result
                 else:
                     result = self.get(key)
-                    if result is not None:
+                    if result is None:
+                        pass
+                    elif result in _redos:
+                        logger.warning('redo result')
+                        logging.getLogger().warning('redo result')
+                    else:
                         return result
 
                 result = func(*args, **kwargs)
 
                 value = result
-                self.put(key, value)
+                if value != _ignore and value not in _redos:
+                    self.put(key, value)
+                else:
+                    logger.warning('ignore result')
+
 
                 return result
 
@@ -186,71 +210,3 @@ class Snapshot(object):
         return do_snapshot
 
 
-def test_kv():
-    app = Snapshot('./db/kv')
-
-    # old
-    @app.snapshot(1, 2, 'info')
-    def inner(a, b, c, **kwargs):
-        print(kwargs)
-        return a+b+c
-
-    res = inner(5, 6, 1, info='test', extra=None)
-
-    assert res == app.get([6, 1, 'test'])
-
-    # new
-    app.set_upgrade(1, 2, 'info')
-
-    @app.snapshot(1, 2, 'info', 'extra')
-    def inner(a, b, c, **kwargs):
-        print(kwargs)
-        return a+b+c
-    res = inner(5, 6, 1, info='test', extra=None)
-
-    assert res == app.get([6, 1, 'test', None])
-
-
-def test_null():
-    app = Snapshot('./db/null')
-
-    @app.snapshot(1, 2, 'info')
-    def inner(a, b, c, **kwargs):
-        print(kwargs)
-        return []
-    res = inner(5, 6, 1, info='test', extra=None)
-    db_value = app.get([6, 1, 'test'])
-    print(res)
-    print(db_value)
-    assert res == db_value
-
-
-def test_iter():
-    app = Snapshot('./db/iter')
-
-    for k, v in app:
-        print(k, v)
-
-
-def test_op():
-    app = Snapshot('./db/op')
-
-    key = ['test_put']
-
-    app.get(key)
-
-    right = ['test_put']
-    app.put(key, right)
-    left = app.get(key)
-    assert left == right
-
-    right = 'test_put'
-    app.put(key, 'test_put')
-    left = app.get(key)
-    assert left == right
-
-    print(app.exist(key))
-
-
-if __name__ == "__main__":
-    test()
