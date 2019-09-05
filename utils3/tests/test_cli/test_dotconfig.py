@@ -1,10 +1,17 @@
 from utils3.cli.dotconfig import *
-from utils3.tests.test_cli.fixtures import config_file,section_config_file
+from utils3.tests.test_cli.fixtures import config_file, section_config_file
 
 import configparser
 import argparse
 
 import pytest
+
+
+@pytest.fixture()
+def parsed_config(section_config_file):
+    config = configparser.ConfigParser()
+    config.read(section_config_file)
+    yield config
 
 
 def test_dot(section_config_file):
@@ -23,13 +30,13 @@ def test_dot_conf(section_config_file):
     obj = DotConfig(config)
     print(obj.dot.a.b.c)
 
+
 def test_init(section_config_file):
     config = configparser.ConfigParser()
     config.read(section_config_file)
     print(list(config.defaults().items()))
     config = config.defaults()
     obj = DotConfig(config)
-
 
     parser = argparse.ArgumentParser()
     parser.add_argument('test')
@@ -41,5 +48,3 @@ def test_init(section_config_file):
 
     with pytest.raises(UnsupportException):
         obj = DotConfig([])
-
-

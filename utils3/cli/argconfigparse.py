@@ -24,7 +24,7 @@ arg.key > config.key (待定）
 
 from argparse import ArgumentParser, _ArgumentGroup
 from configparser import ConfigParser
-
+from pprint import pprint
 from io import StringIO
 import os
 
@@ -52,8 +52,8 @@ class ArgConfigSubparser():
         return getattr(self._object, item)
 
     def add_argument(self, *args, **kwargs):
-        res = self._object.add_argument(*args, **kwargs)
-        return self._config.fix_argument(res)
+        arg_item = self._object.add_argument(*args, **kwargs)
+        return self._config.__fix_argument(arg_item)
 
 
 class ArgConfigGroup():
@@ -66,7 +66,7 @@ class ArgConfigGroup():
 
     def add_argument(self, *args, **kwargs):
         res = self._object.add_argument(*args, **kwargs)
-        return self._config.fix_argument(res)
+        return self._config.__fix_argument(res)
 
     def add_argument_group(self, *args: Any, **kwargs: Any):
         res = self._object.add_argument_group(*args, **kwargs)
@@ -96,6 +96,8 @@ class ArgConfigParser(ArgumentParser):
 
         self.arg_parser = ArgumentParser(*args, **kwargs)
 
+        self.fix_list = []
+
         super().__init__(*args, **kwargs)
 
     def __getattribute__(self, name):
@@ -117,13 +119,13 @@ class ArgConfigParser(ArgumentParser):
 
         return attr
 
-    def get_config(self, key, ktype=None):
+    def get_config(self, key, val_type=None):
         value = self.config[key]
-        if ktype is int:
+        if val_type is int:
             return self.config.getint(key)
-        elif ktype is float:
+        elif val_type is float:
             return self.config.getfloat(key)
-        elif ktype is bool:
+        elif val_type is bool:
             return self.config.getboolean(key)
         else:
             return value
@@ -131,31 +133,49 @@ class ArgConfigParser(ArgumentParser):
     def has_config(self, key):
         return key in self.config
 
-    def print_config(self):
-        print(self.config)
+    def pp(self):
+        pprint(self.config)
 
-    def fix_argument(self, res):
+    def __fix_argument(self, arg_item):
         # try to hook and change the default from config
-        key = res.dest
+        key = arg_item.dest
         if self.has_config(key):
-            res.default = self.get_config(key, res.type) or res.default
-        return res
+            arg_item.default = self.get_config(key, arg_item.type) or arg_item.default
+        return arg_item
 
     def add_argument(self, *args, **kwargs):
         res = super().add_argument(*args, **kwargs)
-
-        return self.fix_argument(res)
+        self.fix_list.append(res)
+        return res
 
     def add_argument_group(self, *args: Any, **kwargs: Any):
         res = super().add_argument_group(*args, **kwargs)
 
         return ArgConfigGroup(self, res)
 
-    def merge(self, args):
+    def __merge(self, args):
+
         for k, v in self.config.items():
             if not hasattr(args, k):
                 setattr(args, k, v)
+            else:
+                given = getattr(args, k)
+                setattr(args, k, given or v)
         return args
+
+    def set_config(self, key, val_type, default):
+        # TODO: allow fix type
+        pass
+
+    def parse_config_file(self, arg_config):
+        config_parser = self.config_parser
+        if arg_config:
+            with StringIO() as fd:
+                fd.write('[DEFAULT]\n' + open(arg_config).read())
+                fd.seek(0, os.SEEK_SET)
+                config_parser.read_file(fd)
+
+        self.config = config_parser[config_parser.default_section]
 
     def parse_args(self, *args, **kwargs):
         """
@@ -164,6 +184,9 @@ class ArgConfigParser(ArgumentParser):
         :param kwargs:
         :return:
         """
+        # TODO: when is the time to fix argument?
+        for item in self.fix_list:
+            self.__fix_argument(item)
 
         # FIXME set defaults is work, but the type is undefined
         # must fix the type, so hook is still better
@@ -171,4 +194,4 @@ class ArgConfigParser(ArgumentParser):
 
         origin_args = super().parse_args(*args, **kwargs)
 
-        return self.merge(origin_args)
+        return self.__merge(origin_args)
