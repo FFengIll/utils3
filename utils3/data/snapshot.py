@@ -17,7 +17,10 @@ class Snapshot(object):
     so we can bypass the known pair to save time/cpu/...
     """
 
-    def __init__(self, dbpath, *args, debug=False, **kwargs):
+    def __init__(self, dbpath, *args, debug=False, refresh=None, **kwargs):
+        """
+        :param refresh: ignore data in db and refresh using new value
+        """
         super().__init__(*args, **kwargs)
         try:
             self.db = DB(dbpath, create_if_missing=True)
@@ -29,6 +32,11 @@ class Snapshot(object):
 
         if debug:
             handler.level = logging.DEBUG
+
+        if refresh:
+            self.refresh = True
+        else:
+            self.refresh = False
 
     def __del__(self):
         self.close()
@@ -43,6 +51,9 @@ class Snapshot(object):
     def __contains__(self, key):
         # raise Exception('we do NOT know which one means EXIST')
         return self.get(key, None) is not None
+
+    def __call__(self, *args, ignore=None, redos=None):
+        return self.snapshot(*args, ignore, redos)
 
     def close(self):
         if self.db:
@@ -133,7 +144,7 @@ class Snapshot(object):
             key.append(kwargs[k])
         return key
 
-    def snapshot(self, *_args, ignore=None, redos=None):
+    def snapshot(self, *_args, ignore=None, redos=None, ignore_callback=None, redo_callback=None):
         """
         the args:
         can be number: the idx/pos of given args
@@ -154,8 +165,25 @@ class Snapshot(object):
         logger.debug('choose name kwargs: {}', keys)
 
         def do_snapshot(func):
+            def is_ignore(value):
+                if value == _ignore:
+                    return True
 
-            def inner(*args, **kwargs):
+                if ignore_callback and ignore_callback(value):
+                    return True
+
+                return False
+
+            def is_redo(value):
+                if value in _redos:
+                    return True
+
+                if redo_callback and redo_callback(value):
+                    return True
+
+                return False
+
+            def wrapper(*args, **kwargs):
                 key = self.get_key(positions, keys, *args, **kwargs)
 
                 if self.upgrade:
@@ -177,24 +205,26 @@ class Snapshot(object):
                     else:
                         result = self.recover_bytes(result)
 
-                        if result in _redos:
+                        if is_redo(result):
                             logger.warning('redo result: {}', result)
                             logging.getLogger().warning('redo result')
+                        elif self.refresh:
+                            pass
                         else:
                             return result
 
                 result = func(*args, **kwargs)
                 value = result
 
-                if value == _ignore:
+                if is_ignore(value):
                     logger.warning('ignore result: {}', result)
-                elif value in _redos:
+                elif is_redo(value):
                     logger.warning('redo result: {}', result)
                 else:
                     self.put(key, value)
 
                 return result
 
-            return inner
+            return wrapper
 
         return do_snapshot
