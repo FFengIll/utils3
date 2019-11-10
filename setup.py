@@ -8,8 +8,13 @@ from utils3 import __version__
 install_requires = [
     'plyvel',
     'logbook',
+    'coloredlogs',
+
 ]
 
+scripts = [
+    'utils3_code.py',
+]
 setup(
     name='utils3',
     description='utils for python 3',
@@ -21,13 +26,11 @@ setup(
     },
     install_requires=install_requires,
     extras_require={
-        'testcases':[],
+        'testcases': [],
         'docs': [],
         'tests': ['pytest'],
     },
     python_requires=">=2.7, >=3.4, ",
     setup_requires=['setuptools'],
-    scripts = [
-        
-    ],
+    scripts=scripts,
 )

@@ -24,6 +24,9 @@ utils3 contain some out-box api with python features like file, serialize, timer
 
 all tests work on pytest, so it is also a demo project of `pytest` :-D
 
+# bin
+- utils3_code.py
+
 # api
 ## data
 - snapshot
@@ -31,17 +34,26 @@ all tests work on pytest, so it is also a demo project of `pytest` :-D
   - try to use `decorator` to store input and output of the function which will be edited, interrupted and so on.
   - snapshot try to save history of io to short time cost and save durable data.
   - 基于python修饰器，将特定函数的输入（参数）和输出（返回值）持久化存储在数据库中（默认使用简单的文件数据库leveldb）
+- encode
+  - detect the encode mode if we can
+- indent & printer
+  - control the print format
+- convert
+  - any thing to any other thing if we can
 
 ## cli
 - argconfigarse
   - Parse Argument and Parse Config (file) in the meanwhile
   - wrapper of `argparse` and `configarse`
   - try to merge their function as much as possible to support general kv management.
-  - 将参数解析和配置文件解析一体化合并的工具，使得参数和配置能协作生效，避免重复管理
+  - 将参数解析和配置文件解析一体化合并的工具，使得参数和配置能协作生效，避免重复编码和重复管理
+- logger
+  - get any logger quickly and simply
+
 
 ## file
 - hash file
-- 
+-
 
 ## serialize
 
@@ -49,4 +61,4 @@ all tests work on pytest, so it is also a demo project of `pytest` :-D
 
 ## hash
 - see `file`
-- 
+-
