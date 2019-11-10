@@ -25,7 +25,7 @@ class Detector():
                     count += 1
             except:
                 traceback.print_exc()
-        if count <=0 :
+        if count <= 0:
             log.warning('found nothing we know')
         return count
 
@@ -39,6 +39,8 @@ class Detector():
         for k, v in cls.__dict__.items():
             if isinstance(v, types.FunctionType):
                 self.register_function(v)
+
+        return cls
 
 
 detector = Detector()
