@@ -183,7 +183,7 @@ class Snapshot(object):
 
                 return False
 
-            def wrapper(*args, **kwargs):
+            def worker(*args, **kwargs):
                 key = self.get_key(positions, keys, *args, **kwargs)
 
                 if self.upgrade:
@@ -225,6 +225,6 @@ class Snapshot(object):
 
                 return result
 
-            return wrapper
+            return worker
 
         return do_snapshot
