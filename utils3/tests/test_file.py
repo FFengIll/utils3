@@ -14,3 +14,8 @@ def test_hash_file(tmp_path):
     assert res == '40bd001563085fc35165329ea1ff5c5ecbdbbeef'
     res = hash_file('sha256', filepath)
     print(res)
+
+
+def test_hash_bytes(tmp_path):
+    res = md5_bytes(b'123')
+    assert res == '202cb962ac59075b964b07152d234b70'
