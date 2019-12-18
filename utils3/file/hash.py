@@ -3,6 +3,7 @@ open-box api: hash file.
 """
 from hashlib import md5, sha1
 import hashlib
+from io import StringIO, BytesIO
 
 
 def hash_file(method, filepath):
@@ -23,6 +24,23 @@ def hash_file(method, filepath):
     return res
 
 
+def _md5(io):
+    md5_obj = hashlib.md5()
+    while 1:
+        d = io.read(8096)
+        if not d:
+            break
+        md5_obj.update(d)
+    hash_code = md5_obj.hexdigest()
+    res = str(hash_code).lower()
+    return res
+
+
+def md5_bytes(data):
+    io = BytesIO(data)
+    return _md5(io)
+
+
 def md5_file(filepath):
     # may cause some error!
     with open(filepath, 'rb') as fd:
@@ -36,5 +54,3 @@ def md5_file(filepath):
         res = str(hash_code).lower()
 
     return res
-
-
