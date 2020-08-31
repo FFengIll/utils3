@@ -1,0 +1,639 @@
+{
+  "function": "_sscanf_vuln2", 
+  "nodes": [
+    {
+      "index": 0, 
+      "code": null, 
+      "ast_type": "block", 
+      "name": null, 
+      "vertical_order": 0, 
+      "ea": "100000E39", 
+      "value": null, 
+      "size": null
+    }, 
+    {
+      "index": 1, 
+      "code": "v4 = a1", 
+      "ast_type": "expr", 
+      "name": null, 
+      "ea": "100000E39", 
+      "pos": 0, 
+      "value": null, 
+      "size": null
+    }, 
+    {
+      "index": 2, 
+      "code": "v4 = a1", 
+      "name": null, 
+      "ea": "100000E39", 
+      "pos": 0, 
+      "value": null, 
+      "ast_type": "asg", 
+      "type": "char *", 
+      "size": null
+    }, 
+    {
+      "index": 3, 
+      "code": "v4", 
+      "name": "v4", 
+      "ea": "FFFFFFFFFFFFFFFF", 
+      "pos": 0, 
+      "value": null, 
+      "ast_type": "var", 
+      "type": "char *", 
+      "size": 8
+    }, 
+    {
+      "index": 4, 
+      "code": "a1", 
+      "name": "a1", 
+      "ea": "FFFFFFFFFFFFFFFF", 
+      "pos": 1, 
+      "value": null, 
+      "ast_type": "var", 
+      "type": "char *", 
+      "size": 8
+    }, 
+    {
+      "index": 5, 
+      "code": null, 
+      "ast_type": "if", 
+      "name": null, 
+      "ea": "100000E43", 
+      "pos": 1, 
+      "value": null, 
+      "size": null
+    }, 
+    {
+      "index": 6, 
+      "code": null, 
+      "ast_type": "block", 
+      "name": null, 
+      "ea": "100000E5F", 
+      "pos": 0, 
+      "value": null, 
+      "size": null
+    }, 
+    {
+      "index": 7, 
+      "code": "printf(\\\"d: %lf\\\", v2)", 
+      "ast_type": "expr", 
+      "name": null, 
+      "ea": "100000E5F", 
+      "pos": 0, 
+      "value": null, 
+      "size": null
+    }, 
+    {
+      "index": 8, 
+      "code": "printf(\\\"d: %lf\\\", v2)", 
+      "name": "printf", 
+      "ea": "100000E5F", 
+      "pos": 0, 
+      "value": null, 
+      "ast_type": "call", 
+      "type": "void", 
+      "size": null
+    }, 
+    {
+      "index": 9, 
+      "code": "printf", 
+      "name": "printf", 
+      "ea": "FFFFFFFFFFFFFFFF", 
+      "pos": 0, 
+      "value": null, 
+      "ast_type": "obj", 
+      "type": "int (*)(const char *, ...)", 
+      "size": -1
+    }, 
+    {
+      "index": 10, 
+      "code": "\\\"d: %lf\\\"", 
+      "name": "\\\"d: %lf\\\"", 
+      "ea": "100000E51", 
+      "pos": 1, 
+      "value": null, 
+      "ast_type": "obj", 
+      "type": "char *", 
+      "size": -1
+    }, 
+    {
+      "index": 11, 
+      "code": "v2", 
+      "name": "v2", 
+      "ea": "100000E58", 
+      "pos": 2, 
+      "value": null, 
+      "ast_type": "var", 
+      "type": "double", 
+      "size": 8
+    }, 
+    {
+      "index": 12, 
+      "code": "printf(\\\"i: %d\\\", v3)", 
+      "ast_type": "expr", 
+      "name": null, 
+      "ea": "100000E73", 
+      "pos": 1, 
+      "value": null, 
+      "size": null
+    }, 
+    {
+      "index": 13, 
+      "code": "printf(\\\"i: %d\\\", v3)", 
+      "name": "printf", 
+      "ea": "100000E73", 
+      "pos": 0, 
+      "value": null, 
+      "ast_type": "call", 
+      "type": "void", 
+      "size": null
+    }, 
+    {
+      "index": 14, 
+      "code": "printf", 
+      "name": "printf", 
+      "ea": "FFFFFFFFFFFFFFFF", 
+      "pos": 0, 
+      "value": null, 
+      "ast_type": "obj", 
+      "type": "int (*)(const char *, ...)", 
+      "size": -1
+    }, 
+    {
+      "index": 15, 
+      "code": "\\\"i: %d\\\"", 
+      "name": "\\\"i: %d\\\"", 
+      "ea": "100000E64", 
+      "pos": 1, 
+      "value": null, 
+      "ast_type": "obj", 
+      "type": "char *", 
+      "size": -1
+    }, 
+    {
+      "index": 16, 
+      "code": "v3", 
+      "name": "v3", 
+      "ea": "100000E6B", 
+      "pos": 2, 
+      "value": null, 
+      "ast_type": "var", 
+      "type": "unsigned int", 
+      "size": 4
+    }, 
+    {
+      "index": 17, 
+      "code": "printf(\\\"s: %s\\\", &v5)", 
+      "ast_type": "expr", 
+      "name": null, 
+      "ea": "100000E88", 
+      "pos": 2, 
+      "value": null, 
+      "size": null
+    }, 
+    {
+      "index": 18, 
+      "code": "printf(\\\"s: %s\\\", &v5)", 
+      "name": "printf", 
+      "ea": "100000E88", 
+      "pos": 0, 
+      "value": null, 
+      "ast_type": "call", 
+      "type": "void", 
+      "size": null
+    }, 
+    {
+      "index": 19, 
+      "code": "printf", 
+      "name": "printf", 
+      "ea": "FFFFFFFFFFFFFFFF", 
+      "pos": 0, 
+      "value": null, 
+      "ast_type": "obj", 
+      "type": "int (*)(const char *, ...)", 
+      "size": -1
+    }, 
+    {
+      "index": 20, 
+      "code": "\\\"s: %s\\\"", 
+      "name": "\\\"s: %s\\\"", 
+      "ea": "100000E78", 
+      "pos": 1, 
+      "value": null, 
+      "ast_type": "obj", 
+      "type": "char *", 
+      "size": -1
+    }, 
+    {
+      "index": 21, 
+      "code": "&v5", 
+      "name": null, 
+      "ea": "100000E7F", 
+      "pos": 2, 
+      "value": null, 
+      "ast_type": "ref", 
+      "type": "char *", 
+      "size": null
+    }, 
+    {
+      "index": 22, 
+      "code": "v5", 
+      "name": "v5", 
+      "ea": "100000E7F", 
+      "pos": 0, 
+      "value": null, 
+      "ast_type": "var", 
+      "type": "char", 
+      "size": -1
+    }, 
+    {
+      "index": 23, 
+      "code": null, 
+      "ast_type": "block", 
+      "name": null, 
+      "ea": "100000E9E", 
+      "pos": 1, 
+      "value": null, 
+      "size": null
+    }, 
+    {
+      "index": 24, 
+      "code": "printf(\\\"Failure\\\")", 
+      "ast_type": "expr", 
+      "name": null, 
+      "ea": "100000E9E", 
+      "pos": 0, 
+      "value": null, 
+      "size": null
+    }, 
+    {
+      "index": 25, 
+      "code": "printf(\\\"Failure\\\")", 
+      "name": "printf", 
+      "ea": "100000E9E", 
+      "pos": 0, 
+      "value": null, 
+      "ast_type": "call", 
+      "type": "void", 
+      "size": null
+    }, 
+    {
+      "index": 26, 
+      "code": "printf", 
+      "name": "printf", 
+      "ea": "FFFFFFFFFFFFFFFF", 
+      "pos": 0, 
+      "value": null, 
+      "ast_type": "obj", 
+      "type": "int (*)(const char *, ...)", 
+      "size": -1
+    }, 
+    {
+      "index": 27, 
+      "code": "\\\"Failure\\\"", 
+      "name": "\\\"Failure\\\"", 
+      "ea": "100000E95", 
+      "pos": 1, 
+      "value": null, 
+      "ast_type": "obj", 
+      "type": "char *", 
+      "size": -1
+    }, 
+    {
+      "index": 28, 
+      "code": "sscanf(a1, \\\"%d %lf %s\\\", &v3, &v2, &v5)", 
+      "name": "sscanf", 
+      "ea": "100000E43", 
+      "pos": 2, 
+      "value": null, 
+      "ast_type": "call", 
+      "type": "int", 
+      "size": null
+    }, 
+    {
+      "index": 29, 
+      "code": "sscanf", 
+      "name": "sscanf", 
+      "ea": "FFFFFFFFFFFFFFFF", 
+      "pos": 0, 
+      "value": null, 
+      "ast_type": "obj", 
+      "type": "int (*)(const char *, const char *, ...)", 
+      "size": -1
+    }, 
+    {
+      "index": 30, 
+      "code": "a1", 
+      "name": "a1", 
+      "ea": "FFFFFFFFFFFFFFFF", 
+      "pos": 1, 
+      "value": null, 
+      "ast_type": "var", 
+      "type": "char *", 
+      "size": 8
+    }, 
+    {
+      "index": 31, 
+      "code": "\\\"%d %lf %s\\\"", 
+      "name": "\\\"%d %lf %s\\\"", 
+      "ea": "100000E18", 
+      "pos": 2, 
+      "value": null, 
+      "ast_type": "obj", 
+      "type": "char *", 
+      "size": -1
+    }, 
+    {
+      "index": 32, 
+      "code": "&v3", 
+      "name": null, 
+      "ea": "100000E1F", 
+      "pos": 3, 
+      "value": null, 
+      "ast_type": "ref", 
+      "type": "unsigned int *", 
+      "size": null
+    }, 
+    {
+      "index": 33, 
+      "code": "v3", 
+      "name": "v3", 
+      "ea": "100000E1F", 
+      "pos": 0, 
+      "value": null, 
+      "ast_type": "var", 
+      "type": "unsigned int", 
+      "size": -1
+    }, 
+    {
+      "index": 34, 
+      "code": "&v2", 
+      "name": null, 
+      "ea": "100000E23", 
+      "pos": 4, 
+      "value": null, 
+      "ast_type": "ref", 
+      "type": "double *", 
+      "size": null
+    }, 
+    {
+      "index": 35, 
+      "code": "v2", 
+      "name": "v2", 
+      "ea": "100000E23", 
+      "pos": 0, 
+      "value": null, 
+      "ast_type": "var", 
+      "type": "double", 
+      "size": -1
+    }, 
+    {
+      "index": 36, 
+      "code": "&v5", 
+      "name": null, 
+      "ea": "100000E27", 
+      "pos": 5, 
+      "value": null, 
+      "ast_type": "ref", 
+      "type": "char *", 
+      "size": null
+    }, 
+    {
+      "index": 37, 
+      "code": "v5", 
+      "name": "v5", 
+      "ea": "100000E27", 
+      "pos": 0, 
+      "value": null, 
+      "ast_type": "var", 
+      "type": "char", 
+      "size": -1
+    }, 
+    {
+      "index": 38, 
+      "code": null, 
+      "ast_type": "return", 
+      "name": null, 
+      "ea": "100000EBD", 
+      "pos": 2, 
+      "value": null, 
+      "size": null
+    }, 
+    {
+      "index": 39, 
+      "code": "__stack_chk_guard", 
+      "name": "__stack_chk_guard", 
+      "ea": "FFFFFFFFFFFFFFFF", 
+      "pos": 0, 
+      "value": null, 
+      "ast_type": "obj", 
+      "type": "_QWORD", 
+      "size": 8
+    }
+  ], 
+  "edges": [
+    {
+      "source": 0, 
+      "target": 1, 
+      "label": null
+    }, 
+    {
+      "source": 0, 
+      "target": 5, 
+      "label": null
+    }, 
+    {
+      "source": 0, 
+      "target": 38, 
+      "label": null
+    }, 
+    {
+      "source": 1, 
+      "target": 2, 
+      "label": null
+    }, 
+    {
+      "source": 2, 
+      "target": 3, 
+      "label": "x"
+    }, 
+    {
+      "source": 2, 
+      "target": 4, 
+      "label": "y"
+    }, 
+    {
+      "source": 5, 
+      "target": 6, 
+      "label": "then"
+    }, 
+    {
+      "source": 5, 
+      "target": 23, 
+      "label": "else"
+    }, 
+    {
+      "source": 5, 
+      "target": 28, 
+      "label": "if"
+    }, 
+    {
+      "source": 6, 
+      "target": 7, 
+      "label": null
+    }, 
+    {
+      "source": 6, 
+      "target": 12, 
+      "label": null
+    }, 
+    {
+      "source": 6, 
+      "target": 17, 
+      "label": null
+    }, 
+    {
+      "source": 7, 
+      "target": 8, 
+      "label": null
+    }, 
+    {
+      "source": 8, 
+      "target": 9, 
+      "label": "x"
+    }, 
+    {
+      "source": 8, 
+      "target": 10, 
+      "label": null
+    }, 
+    {
+      "source": 8, 
+      "target": 11, 
+      "label": null
+    }, 
+    {
+      "source": 12, 
+      "target": 13, 
+      "label": null
+    }, 
+    {
+      "source": 13, 
+      "target": 14, 
+      "label": "x"
+    }, 
+    {
+      "source": 13, 
+      "target": 15, 
+      "label": null
+    }, 
+    {
+      "source": 13, 
+      "target": 16, 
+      "label": null
+    }, 
+    {
+      "source": 17, 
+      "target": 18, 
+      "label": null
+    }, 
+    {
+      "source": 18, 
+      "target": 19, 
+      "label": "x"
+    }, 
+    {
+      "source": 18, 
+      "target": 20, 
+      "label": null
+    }, 
+    {
+      "source": 18, 
+      "target": 21, 
+      "label": null
+    }, 
+    {
+      "source": 21, 
+      "target": 22, 
+      "label": "x"
+    }, 
+    {
+      "source": 23, 
+      "target": 24, 
+      "label": null
+    }, 
+    {
+      "source": 24, 
+      "target": 25, 
+      "label": null
+    }, 
+    {
+      "source": 25, 
+      "target": 26, 
+      "label": "x"
+    }, 
+    {
+      "source": 25, 
+      "target": 27, 
+      "label": null
+    }, 
+    {
+      "source": 28, 
+      "target": 29, 
+      "label": "x"
+    }, 
+    {
+      "source": 28, 
+      "target": 30, 
+      "label": null
+    }, 
+    {
+      "source": 28, 
+      "target": 31, 
+      "label": null
+    }, 
+    {
+      "source": 28, 
+      "target": 32, 
+      "label": null
+    }, 
+    {
+      "source": 28, 
+      "target": 34, 
+      "label": null
+    }, 
+    {
+      "source": 28, 
+      "target": 36, 
+      "label": null
+    }, 
+    {
+      "source": 32, 
+      "target": 33, 
+      "label": "x"
+    }, 
+    {
+      "source": 34, 
+      "target": 35, 
+      "label": "x"
+    }, 
+    {
+      "source": 36, 
+      "target": 37, 
+      "label": "x"
+    }, 
+    {
+      "source": 38, 
+      "target": 39, 
+      "label": null
+    }
+  ], 
+  "arguments": [
+    {
+      "width": 8, 
+      "type": "char *", 
+      "name": "a1"
+    }
+  ]
+}

@@ -17,7 +17,9 @@ utils3 contain some out-box api with python features like file, serialize, timer
 
 # deploy
 ## install
-`pip install utils3`
+~~`pip install utils3`~~
+
+actually, it is a module for myself only (for now).
 
 ## test
 `pytest utils3/`
@@ -42,11 +44,8 @@ all tests work on pytest, so it is also a demo project of `pytest` :-D
   - any thing to any other thing if we can
 
 ## cli
-- argconfigarse
-  - Parse Argument and Parse Config (file) in the meanwhile
-  - wrapper of `argparse` and `configarse`
-  - try to merge their function as much as possible to support general kv management.
-  - 将参数解析和配置文件解析一体化合并的工具，使得参数和配置能协作生效，避免重复编码和重复管理
+- arguments
+  - use python `click`
 - logger
   - get any logger quickly and simply
 
